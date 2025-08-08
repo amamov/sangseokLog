@@ -33,7 +33,7 @@ export default function SiteHeader() {
 }
 
 // lib/notion.ts
-const NOTION_TOKEN = process.env.NEXT_NOTION_API_TOKEN;
+const NOTION_TOKEN = process.env.NEXT_PUBLIC_NOTION_API_TOKEN;
 
 // WARNING: Hardcoding secrets is insecure. Replace with env var in production.
 function getEnv(key, defaultValue) {

@@ -12,7 +12,7 @@ const FALLBACK_DB_ID = "9dcab0525deb49bea25e252a24fc48d4"
 // Hardcoding secrets is insecure and not recommended for production.
 // This token will be visible in your source code.
 // Please use Environment Variables for better security.
-const NOTION_TOKEN = process.env.NEXT_NOTION_API_TOKEN
+const NOTION_TOKEN = process.env.NEXT_PUBLIC_NOTION_API_TOKEN
 
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID || FALLBACK_DB_ID
 
