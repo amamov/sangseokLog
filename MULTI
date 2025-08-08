@@ -1,0 +1,43 @@
+// app/page.tsx
+import Link from 'next/link';
+
+export default function Page() {
+  return (
+    <div>
+      <header className="py-12">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-[color:var(--toss-gray-900)]">
+          {'상석 로그'}
+        </h1>
+        <p className="mt-1 text-xs sm:text-sm text-[color:var(--toss-gray-500)]">{'SANGSEOK LOG'}</p>
+        <p className="mt-4 text-sm sm:text-base text-[color:var(--toss-gray-600)] leading-relaxed">
+          {'Notion 데이터베이스의 각 페이지를 포스트로 매핑합니다. 아래 목록에서 글을 선택하세요.'}
+        </p>
+      </header>
+      {/* rest of code here */}
+    </div>
+  );
+}
+
+// components/site-header.tsx
+import Link from 'next/link';
+
+export default function SiteHeader() {
+  return (
+    <div>
+      <Link href="/" aria-label="SANGSEOK LOG" className="font-bold text-[color:var(--toss-blue-700)]">
+        {'상석 로그'}
+      </Link>
+      {/* rest of code here */}
+    </div>
+  );
+}
+
+// lib/notion.ts
+const NOTION_TOKEN = process.env.NEXT_NOTION_API_TOKEN;
+
+// WARNING: Hardcoding secrets is insecure. Replace with env var in production.
+function getEnv(key, defaultValue) {
+  return process.env[key] || defaultValue;
+}
+
+export { NOTION_TOKEN };
