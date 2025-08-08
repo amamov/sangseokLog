@@ -5,38 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { ArrowLeft } from 'lucide-react'
 import { format } from "date-fns"
-
-type PostDetail = {
-  id: string
-  slug: string
-  title: string
-  excerpt?: string
-  date?: string
-  tags?: string[]
-  cover?: { url: string; alt?: string } | null
-  blocks: any[]
-}
+import { getPostById } from "@/lib/notion"
 
 export const revalidate = 60
 
-async function getPost(slug: string): Promise<PostDetail | null> {
-  const base =
-    process.env.NEXT_PUBLIC_VERCEL_URL && process.env.NEXT_PUBLIC_VERCEL_URL.length > 0
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : ""
-  const res = await fetch(`${base}/api/posts/${encodeURIComponent(slug)}`, {
-    next: { revalidate: 60 },
-    cache: "force-cache",
-  }).catch(async () => {
-    return await fetch(`/api/posts/${encodeURIComponent(slug)}`, { next: { revalidate: 60 }, cache: "force-cache" })
-  })
-  if (!res.ok) return null
-  const data = (await res.json()) as { post: PostDetail | null }
-  return data.post
-}
-
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug)
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug: id } = await params
+  const post = await getPostById(id)
   if (!post) return notFound()
 
   return (

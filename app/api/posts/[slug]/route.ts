@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server"
-import { getPostBySlug } from "@/lib/notion"
+import { getPostById } from "@/lib/notion"
 
-export async function GET(_: Request, { params }: { params: { slug: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const post = await getPostBySlug(params.slug)
+    const { slug: id } = await params
+    const post = await getPostById(id)
     if (!post) {
       return NextResponse.json({ post: null }, { status: 404 })
     }

@@ -46,11 +46,15 @@ function getPlainText(richText: any[] | undefined) {
 }
 
 function slugify(input: string) {
+  // 한글과 영문, 숫자를 제외한 특수문자를 처리
+  // 공백과 특수문자를 하이픈으로 변경
   return input
-    .toLowerCase()
     .trim()
-    .replace(/[\s\W-]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, '-')           // 공백을 하이픈으로
+    .replace(/[^\w\uAC00-\uD7AF-]/g, '-')  // 한글, 영문, 숫자, 하이픈 외 제거
+    .replace(/-+/g, '-')            // 연속된 하이픈을 하나로
+    .replace(/^-+|-+$/g, '')        // 시작과 끝의 하이픈 제거
 }
 
 function first<T>(arr: T[] | undefined | null): T | undefined {
@@ -132,7 +136,16 @@ function extractSlug(page: NotionPage, title: string): string {
     const text = getPlainText(maybe.title)
     if (text) return slugify(text)
   }
-  return slugify(title)
+  
+  // Fallback to slugified title
+  const slugFromTitle = slugify(title)
+  
+  // If slug is still empty, use page ID as fallback
+  if (!slugFromTitle || slugFromTitle.length === 0) {
+    return page.id.replace(/-/g, '')
+  }
+  
+  return slugFromTitle
 }
 
 function isPublished(page: NotionPage): boolean {
@@ -218,6 +231,42 @@ async function getBlocksRecursive(blockId: string, acc: any[] = []): Promise<any
   return acc
 }
 
+export async function getPostById(id: string): Promise<{
+  id: string
+  slug: string
+  title: string
+  excerpt?: string
+  date?: string
+  tags?: string[]
+  cover?: { url: string; alt?: string } | null
+  blocks: any[]
+} | null> {
+  if (!NOTION_DATABASE_ID) throw new Error("NOTION_DATABASE_ID is not set.")
+
+  try {
+    // Direct fetch by page ID
+    const page = await notionFetch(`/pages/${id}`, { method: "GET" })
+    
+    if (!page || !isPublished(page)) return null
+
+    const title = extractTitle(page)
+    const post = {
+      id: page.id,
+      slug: extractSlug(page, title),
+      title,
+      excerpt: extractExcerpt(page),
+      date: extractDate(page),
+      tags: extractTags(page),
+      cover: extractCover(page),
+      blocks: await getBlocksRecursive(page.id),
+    }
+    return post
+  } catch (error) {
+    console.error(`Failed to fetch post with id ${id}:`, error)
+    return null
+  }
+}
+
 export async function getPostBySlug(slug: string): Promise<{
   id: string
   slug: string
@@ -230,6 +279,9 @@ export async function getPostBySlug(slug: string): Promise<{
 } | null> {
   if (!NOTION_DATABASE_ID) throw new Error("NOTION_DATABASE_ID is not set.")
 
+  // Decode the slug in case it's URL encoded
+  const decodedSlug = decodeURIComponent(slug)
+
   // First try direct filter on 'Slug' if exists
   let page: NotionPage | null = null
   try {
@@ -238,7 +290,7 @@ export async function getPostBySlug(slug: string): Promise<{
       body: JSON.stringify({
         filter: {
           property: "Slug",
-          rich_text: { equals: slug },
+          rich_text: { equals: decodedSlug },
         },
         page_size: 1,
       }),
@@ -253,7 +305,7 @@ export async function getPostBySlug(slug: string): Promise<{
   if (!page) {
     // Fallback: fetch batch and find by computed slug
     const posts = await queryPosts()
-    const match = posts.find((p) => p.slug === slug)
+    const match = posts.find((p) => p.slug === decodedSlug || p.slug === slug)
     if (!match) return null
     // Retrieve page by id to ensure properties are available
     const got = await notionFetch(`/pages/${match.id}`, { method: "GET" })
