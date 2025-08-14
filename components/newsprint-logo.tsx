@@ -1,17 +1,21 @@
-import * as React from "react"
+import * as React from "react";
 
 type Props = {
-  size?: number
-  className?: string
-  title?: string
-}
+  size?: number;
+  className?: string;
+  title?: string;
+};
 
 /**
  * Newsprint-style circular monogram logo for "SANGSEOK LOG"
  * - Monochrome, works with the current newspaper theme variables
  * - Uses currentColor for strokes; inherits text color
  */
-export function NewsprintLogo({ size = 32, className, title = "SANGSEOK LOG" }: Props) {
+export function NewsprintLogo({
+  size = 32,
+  className,
+  title = "SANGSEOK LOG",
+}: Props) {
   return (
     <svg
       width={size}
@@ -32,14 +36,45 @@ export function NewsprintLogo({ size = 32, className, title = "SANGSEOK LOG" }: 
       </defs>
 
       {/* Outer ring */}
-      <circle cx="32" cy="32" r="30" fill="url(#grain)" stroke="currentColor" strokeWidth="2" />
+      <circle
+        cx="32"
+        cy="32"
+        r="30"
+        fill="url(#grain)"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
 
       {/* Inner ring */}
-      <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.7" />
+      <circle
+        cx="32"
+        cy="32"
+        r="24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        opacity="0.7"
+      />
 
       {/* Newspaper stripes */}
-      <line x1="14" y1="24" x2="50" y2="24" stroke="currentColor" strokeWidth="1" opacity="0.35" />
-      <line x1="14" y1="40" x2="50" y2="40" stroke="currentColor" strokeWidth="1" opacity="0.35" />
+      <line
+        x1="14"
+        y1="24"
+        x2="50"
+        y2="24"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.35"
+      />
+      <line
+        x1="14"
+        y1="40"
+        x2="50"
+        y2="40"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.35"
+      />
 
       {/* Monogram 'SL' */}
       <g fill="currentColor">
@@ -52,5 +87,5 @@ export function NewsprintLogo({ size = 32, className, title = "SANGSEOK LOG" }: 
         <path d="M38 22h4v17h9v3.5H38V22z" opacity="0.95" />
       </g>
     </svg>
-  )
+  );
 }

@@ -121,3 +121,16 @@
     @apply bg-background text-foreground;
   }
 }
+.prose p:first-of-type::first-letter {
+  initial-letter: initial; /* Reset to default */
+  font-size: initial; /* Reset to default */
+  float: none; /* Remove any float */
+  margin: initial; /* Reset margin */
+  padding: initial; /* Reset padding */
+  line-height: initial; /* Reset line-height */
+  color: initial; /* Reset color */
+  font-weight: initial; /* Reset font-weight */
+  text-shadow: initial; /* Reset text-shadow */
+  text-decoration: initial; /* Reset text-decoration */
+  -webkit-initial-letter: initial; /* For Webkit browsers */
+}

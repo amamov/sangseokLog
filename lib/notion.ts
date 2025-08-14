@@ -240,6 +240,7 @@ export async function getPostById(id: string): Promise<{
   tags?: string[]
   cover?: { url: string; alt?: string } | null
   blocks: any[]
+  notionPageUrl?: string;
 } | null> {
   if (!NOTION_DATABASE_ID) throw new Error("NOTION_DATABASE_ID is not set.")
 
@@ -259,6 +260,7 @@ export async function getPostById(id: string): Promise<{
       tags: extractTags(page),
       cover: extractCover(page),
       blocks: await getBlocksRecursive(page.id),
+      notionPageUrl: page.url, // Add Notion page URL
     }
     return post
   } catch (error) {

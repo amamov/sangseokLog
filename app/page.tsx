@@ -13,7 +13,7 @@ const PER_PAGE = 5;
 
 function formatDateline() {
   const now = new Date();
-  return `Chicago, Ill. — ${format(now, "yyyy.MM.dd")} — Morning Edition — Price 50¢`;
+  return `South Korea — ${format(now, "yyyy.MM.dd")} — Morning Edition — Price 50¢`;
 }
 
 type SortOrder = "desc" | "asc";
@@ -82,7 +82,7 @@ export default async function Page({
               className="text-xs text-[color:var(--ink-muted)]"
               style={{ fontVariantCaps: "small-caps" }}
             >
-              {"Established 2025"}
+              {"Established 2020"}
             </span>
             <span className="inline-block h-[2px] w-20 bg-[color:var(--news-rule)]" />
           </div>
@@ -94,21 +94,6 @@ export default async function Page({
         {/* Sort control (no label) */}
         <div className="mb-3 flex justify-end">
           <SortControl current={sortParam} />
-        </div>
-
-        {/* Section kicker */}
-        <div className="mb-3 flex items-center gap-3">
-          <div
-            className="h-[1px] flex-1 bg-[color:var(--news-rule-soft)]"
-            aria-hidden="true"
-          />
-          <span className="text-[11px] tracking-[0.25em] text-[color:var(--ink-muted)]">
-            {"LATEST STORIES"}
-          </span>
-          <div
-            className="h-[1px] flex-1 bg-[color:var(--news-rule-soft)]"
-            aria-hidden="true"
-          />
         </div>
 
         <section className="space-y-5 pb-10">
